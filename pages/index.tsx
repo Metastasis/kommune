@@ -96,6 +96,7 @@ const Home: NextPage = () => {
   const handleElectricityT3PrevChange = (e: ChangeEvent<HTMLInputElement>) => setElectricityT3Prev(e.target.value)
   const handleElectricityT3CurrentChange = (e: ChangeEvent<HTMLInputElement>) => setElectricityT3Current(e.target.value)
   const cookerType = 'eletricity'
+  const eletricityRateNumber = 3
   const fees = selectFees({cookerType, tariffs})
   const total = calculateCommunal({
     hotWater: {
@@ -120,7 +121,7 @@ const Home: NextPage = () => {
         current: Number(electricityT3Current),
       },
     }
-  }, fees)
+  }, fees, eletricityRateNumber)
   return (
     <div className={styles.container}>
       <Head>
@@ -214,7 +215,7 @@ interface CalcTarrifs {
   drainage: FeeValue,
   eletricity: EletricityTarrif
 }
-function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, eletricityRateNumber: number = 3): number {
+function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, eletricityRateNumber: number): number {
   const hotWater = meterReadings.hotWater.current - meterReadings.hotWater.previous
   const hotWaterTotal = hotWater * fees.hotWater
 
