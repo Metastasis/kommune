@@ -222,6 +222,8 @@ function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, elet
   const coldWater = meterReadings.coldWater.current - meterReadings.coldWater.previous
   const coldWaterTotal = coldWater * fees.coldWater
 
+  const drainage = (coldWater + hotWater) * fees.drainage
+
   let eletricityTotal = 0
   if (eletricityRateNumber === 1) {
 
@@ -235,7 +237,7 @@ function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, elet
     eletricityTotal = eletricityT1 * fee.t1 + eletricityT2 * fee.t2 + eletricityT3 * fee.t3
   }
 
-  return Math.round(hotWaterTotal + coldWaterTotal + eletricityTotal)
+  return Math.round(hotWaterTotal + coldWaterTotal + drainage + eletricityTotal)
 }
 
 function selectFees({cookerType, tariffs}: {cookerType: 'gas' | 'eletricity', tariffs: Tarrifs}) {
