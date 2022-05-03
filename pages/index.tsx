@@ -2,75 +2,14 @@ import React, {ChangeEvent} from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import {fetchTariffs, FeeValue, ElectricityTariff, Tariffs} from '@features/tariffs'
+import useSwr from 'swr'
 import styles from '../styles/Home.module.css'
 
-type FeeValue = number
-interface EletricityTarrif {
-  fee1: {
-    t1: FeeValue
-  },
-  fee2: {
-    t1: FeeValue,
-    t2: FeeValue
-  },
-  fee3: {
-    t1: FeeValue,
-    t2: FeeValue,
-    t3: FeeValue
-  }
-}
-
-interface Tarrifs {
-  country: string,
-  city: string,
-  fees: {
-    coldWater: FeeValue,
-    hotWater: FeeValue,
-    drainage: FeeValue,
-    gasCooker: EletricityTarrif,
-    electricCooker: EletricityTarrif,
-  }
-}
-const apiResponse: Tarrifs = {
-  country: 'russia',
-  city: 'moscow',
-  fees: {
-    coldWater: 43.57,
-    hotWater: 211.67,
-    drainage: 32.02,
-    gasCooker: {
-      fee1: {
-        t1: 5.92
-      },
-      fee2: {
-        t1: 6.81,
-        t2: 2.48
-      },
-      fee3: {
-        t1: 7.10,
-        t2: 5.92,
-        t3: 2.48
-      }
-    },
-    electricCooker: {
-      fee1: {
-        t1: 5.15
-      },
-      fee2: {
-        t1: 5.92,
-        t2: 1.74
-      },
-      fee3: {
-        t1: 6.18,
-        t2: 5.15,
-        t3: 1.74
-      }
-    }
-  }
-}
 
 const Home: NextPage = () => {
-  const tariffs = apiResponse
+  const {data: tariffs} = useSwr('tariffs', () => fetchTariffs('moscow'))
+
   const [hotWaterPrev, setHotWaterPrev] = React.useState('')
   const [hotWaterCurrent, setHotWaterCurrent] = React.useState('488.13')
   const handleWaterPrevChange = (e: ChangeEvent<HTMLInputElement>) => setHotWaterPrev(e.target.value)
@@ -95,10 +34,11 @@ const Home: NextPage = () => {
   const [electricityT3Current, setElectricityT3Current] = React.useState('9349.74')
   const handleElectricityT3PrevChange = (e: ChangeEvent<HTMLInputElement>) => setElectricityT3Prev(e.target.value)
   const handleElectricityT3CurrentChange = (e: ChangeEvent<HTMLInputElement>) => setElectricityT3Current(e.target.value)
-  const cookerType = 'eletricity'
-  const eletricityRateNumber = 3
-  const fees = selectFees({cookerType, tariffs})
-  const total = calculateCommunal({
+
+  const cookerType = 'electricity'
+  const electricityRateNumber = 3
+  const fees = tariffs ? selectFees({cookerType, tariffs}) : null
+  const total = fees ? calculateCommunal({
     hotWater: {
       previous: Number(hotWaterPrev),
       current: Number(hotWaterCurrent),
@@ -121,7 +61,7 @@ const Home: NextPage = () => {
         current: Number(electricityT3Current),
       },
     }
-  }, fees, eletricityRateNumber)
+  }, fees, electricityRateNumber) : null
   return (
     <div className={styles.container}>
       <Head>
@@ -209,13 +149,14 @@ interface MeterReadings {
   }
 }
 
-interface CalcTarrifs {
+interface CalcTariffs {
   coldWater: FeeValue,
   hotWater: FeeValue,
   drainage: FeeValue,
-  eletricity: EletricityTarrif
+  eletricity: ElectricityTariff
 }
-function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, eletricityRateNumber: number): number {
+
+function calculateCommunal(meterReadings: MeterReadings, fees: CalcTariffs, electricityRateNumber: number): number {
   const hotWater = meterReadings.hotWater.current - meterReadings.hotWater.previous
   const hotWaterTotal = hotWater * fees.hotWater
 
@@ -224,23 +165,23 @@ function calculateCommunal(meterReadings: MeterReadings, fees: CalcTarrifs, elet
 
   const drainage = (coldWater + hotWater) * fees.drainage
 
-  let eletricityTotal = 0
-  if (eletricityRateNumber === 1) {
+  let electricityTotal = 0
+  if (electricityRateNumber === 1) {
 
-  } else if (eletricityRateNumber === 2) {
+  } else if (electricityRateNumber === 2) {
 
-  } else if (eletricityRateNumber === 3) {
+  } else if (electricityRateNumber === 3) {
     const fee = fees.eletricity.fee3
-    const eletricityT1 = meterReadings.electricity.t1.current - meterReadings.electricity.t1.previous
-    const eletricityT2 = meterReadings.electricity.t2.current - meterReadings.electricity.t2.previous
-    const eletricityT3 = meterReadings.electricity.t3.current - meterReadings.electricity.t3.previous
-    eletricityTotal = eletricityT1 * fee.t1 + eletricityT2 * fee.t2 + eletricityT3 * fee.t3
+    const electricityT1 = meterReadings.electricity.t1.current - meterReadings.electricity.t1.previous
+    const electricityT2 = meterReadings.electricity.t2.current - meterReadings.electricity.t2.previous
+    const electricityT3 = meterReadings.electricity.t3.current - meterReadings.electricity.t3.previous
+    electricityTotal = electricityT1 * fee.t1 + electricityT2 * fee.t2 + electricityT3 * fee.t3
   }
 
-  return Math.round(hotWaterTotal + coldWaterTotal + drainage + eletricityTotal)
+  return Math.round(hotWaterTotal + coldWaterTotal + drainage + electricityTotal)
 }
 
-function selectFees({cookerType, tariffs}: {cookerType: 'gas' | 'eletricity', tariffs: Tarrifs}) {
+function selectFees({cookerType, tariffs}: {cookerType: 'gas' | 'electricity', tariffs: Tariffs}) {
   const {fees} = tariffs
   const {gasCooker, electricCooker, ...restFees} = fees
   return {
