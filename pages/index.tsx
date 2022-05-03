@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import {fetchTariffs, FeeValue, ElectricityTariff, Tariffs} from '@features/tariffs'
+import {LOGIN_URL, REGISTRATION_URL, useAuth} from '@features/auth'
 import useSwr from 'swr'
 import styles from '../styles/Home.module.css'
 
@@ -62,6 +63,7 @@ const Home: NextPage = () => {
       },
     }
   }, fees, electricityRateNumber) : null
+  const auth = useAuth()
   return (
     <div className={styles.container}>
       <Head>
@@ -78,6 +80,11 @@ const Home: NextPage = () => {
         <p className={styles.description}>
           This app will help you calculate communal payments
         </p>
+
+        <div>
+          {auth.session ? <a href={auth.logoutUrl}>Выйти</a> : <a href={LOGIN_URL}>Войти</a>}
+          {!auth.session && <a href={REGISTRATION_URL}>Регистрация</a>}
+        </div>
 
         <div className={styles.grid}>
           <div className={styles.card}>
