@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  flex: 1;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eaeaea;
+  justify-content: space-between;
+}
+
+.logo {
+  margin-right: 36px;
+}
+
+.menu {
+  display: flex;
+  flex: 1;
+}
+
+.profile {
+  display: flex;
+  margin-left: 36px;
+}

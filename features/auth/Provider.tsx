@@ -36,7 +36,7 @@ export const AuthProvider: FC<{children: ReactElement}> = (props) => {
   const [error, setError] = useState<any>(null)
   useEffect(() => {
     // If the session or error have been loaded, do nothing.
-    if (ctx.session || ctx.error || typeof window === 'undefined') {
+    if (session || error || typeof window === 'undefined') {
       return
     }
     // Try to load the session.
