@@ -11,7 +11,7 @@ export const Header: React.FC<{}> = () => {
         <Link href="/">Kommune</Link>
       </div>
       <div className={styles.menu}>
-        <Link href="/list">Расчеты</Link>
+        <Link href="/calculations">Расчеты</Link>
       </div>
       <div className={styles.profile}>
         {auth.session ? <a href={auth.logoutUrl}>Выйти</a> : <a href={LOGIN_URL}>Войти</a>}

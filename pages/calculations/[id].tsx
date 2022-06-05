@@ -2,15 +2,14 @@ import React, {ChangeEvent} from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
-import Image from 'next/image'
 import {fetchTariffs, FeeValue, ElectricityTariff, Tariffs} from '@features/tariffs'
 import {Header, Footer} from '@features/layout'
-import {LOGIN_URL, REGISTRATION_URL, useAuth} from '@features/auth'
+import {useAuth} from '@features/auth'
 import useSwr from 'swr'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
 
 
-const Home: NextPage = () => {
+const List: NextPage = () => {
   const router = useRouter()
   const auth = useAuth()
   const {data: tariffs} = useSwr('tariffs', () => fetchTariffs('moscow'))
@@ -183,4 +182,4 @@ function selectFees({cookerType, tariffs}: {cookerType: 'gas' | 'electricity', t
   }
 }
 
-export default Home
+export default List
