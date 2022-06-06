@@ -1,6 +1,7 @@
 import React from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {Header, Footer} from '@features/layout'
 import {useAuth} from '@features/auth'
@@ -34,10 +35,10 @@ const List: NextPage = () => {
           <button type="button" onClick={handleCreate}>Создать расчет</button>
         </div>
         <div className={styles.grid}>
-          <ListItem title="Зябликово" totalCalculations={1000} createdAt={new Date('04-20-2022')} />
-          <ListItem title="Зябликово" totalCalculations={1000} createdAt={new Date('04-20-2022')} />
-          <ListItem title="Зябликово" totalCalculations={1000} createdAt={new Date('04-20-2022')} />
-          <ListItem title="Зябликово" totalCalculations={1000} createdAt={new Date('04-20-2022')} />
+          <ListItem href={'/calculations/111'} title={'Зябликово'} totalCalculations={1000} createdAt={new Date('04-20-2022')} />
+          <ListItem href={'/calculations/111'} title={'Зябликово'} totalCalculations={1000} createdAt={new Date('04-20-2022')} />
+          <ListItem href={'/calculations/111'} title={'Зябликово'} totalCalculations={1000} createdAt={new Date('04-20-2022')} />
+          <ListItem href={'/calculations/111'} title={'Зябликово'} totalCalculations={1000} createdAt={new Date('04-20-2022')} />
         </div>
       </main>
 
@@ -47,16 +48,17 @@ const List: NextPage = () => {
 }
 
 interface ListItemProps {
+  href: string,
   title: string
   totalCalculations: number
   createdAt: Date
 }
 
 const ListItem: React.FC<ListItemProps> = (props) => {
-  const {title, totalCalculations, createdAt} = props
+  const {href, title, totalCalculations, createdAt} = props
   return (
     <div className={styles.listItem}>
-      <div className={styles.listItemHeader}>{title}</div>
+      <div className={styles.listItemHeader}><Link href={href}>{title}</Link></div>
       <div className={styles.listItemPrice}>{totalCalculations} Р</div>
       <div className={styles.listItemDate}>{formatDate(createdAt)}</div>
     </div>
