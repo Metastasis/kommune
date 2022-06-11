@@ -6,7 +6,7 @@ import {Footer} from './Footer';
 import {useRouter} from 'next/router';
 import {useAuth} from '@features/auth';
 
-export const PageDefault: React.FC<React.PropsWithChildren<{}>> = ({children}) => {
+export const PageDefault: React.FC<{children?: React.ReactNode}> = ({children}) => {
   const router = useRouter();
   const auth = useAuth();
   const authorized = Boolean(auth.session)
