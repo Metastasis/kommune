@@ -10,10 +10,14 @@ const List: NextPage = () => {
   const handleCreate = React.useCallback(() => {
     router.push('/calculations/create')
   }, [router])
+  const handleCreateTemplate = React.useCallback(() => {
+    router.push('/calculations/create-template')
+  }, [router])
   return (
     <>
       <div className={styles.toolbar}>
         <input type="search" placeholder="search" />
+        <button type="button" onClick={handleCreateTemplate}>Создать шаблон</button>
         <button type="button" onClick={handleCreate}>Создать расчет</button>
       </div>
       <div className={styles.grid}>
