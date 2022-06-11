@@ -7,27 +7,15 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Kommune</title>
-        <meta name="description" content="Kommune calculate communal payments" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      <h1 className={styles.title}>
+        Добро пожаловать в <a href="https://kommune.io">Kommune!</a>
+      </h1>
 
-      <Header />
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Добро пожаловать в <a href="https://kommune.io">Kommune!</a>
-        </h1>
-
-        <p className={styles.description}>
-          С этим приложением Вы легко сможете рассчитать коммунальные платежи
-        </p>
-      </main>
-
-      <Footer />
-    </div>
+      <p className={styles.description}>
+        С этим приложением Вы легко сможете рассчитать коммунальные платежи
+      </p>
+    </>
   )
 }
 

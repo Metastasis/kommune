@@ -22,12 +22,11 @@ const initialContext = {
   error: null,
   logoutUrl: ''
 }
-const AuthContext = createContext<AuthContext>(initialContext)
+const AuthContext = createContext<AuthContext>((null as any))
 
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider: FC<{children: ReactElement}> = (props) => {
-  const [ctx, setCtx] = useState<AuthContext>(initialContext)
   // Contains the current session or undefined.
   const [session, setSession] = useState<Session | null>(null)
   // The URL we can use to log out.
@@ -51,11 +50,17 @@ export const AuthProvider: FC<{children: ReactElement}> = (props) => {
           .then(({ data }) => setLogoutUrl(data.logout_url))
       })
       .catch((err: AxiosError) => {
+        console.log(err);
         setError({
           error: err.toString(),
           data: err.response?.data
         })
       })
+    return () => {
+      setSession(null)
+      setError(null)
+      setLogoutUrl('')
+    }
   }, [])
   return (
     <AuthContext.Provider value={{session, error, logoutUrl}}>

@@ -6,30 +6,22 @@ export const handlers = [
       {
         id: '1',
         title: 'Зябликово',
-        services: [],
         createdAt: new Date('04-20-2022'),
-        status: 'new'
       },
       {
         id: '2',
         title: 'Зябликово',
-        services: [],
         createdAt: new Date('04-19-2022'),
-        status: 'new'
       },
       {
         id: '3',
         title: 'Зябликово',
-        services: [],
         createdAt: new Date('04-18-2022'),
-        status: 'new'
       },
       {
         id: '4',
         title: 'Зябликово',
-        services: [],
         createdAt: new Date('04-17-2022'),
-        status: 'new'
       }
     ]
     return res(
