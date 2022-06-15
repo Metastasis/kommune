@@ -1,5 +1,5 @@
 import { setupWorker } from 'msw'
-import { mockHandlers } from '@features/tariffs'
+import { mockHandlers } from '@features/calculation'
 
 let worker = null;
 
