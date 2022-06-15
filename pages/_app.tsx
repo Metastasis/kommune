@@ -1,14 +1,14 @@
 import React from 'react';
-import {SetupWorkerApi} from 'msw';
 import type { AppProps } from 'next/app'
 import {AuthProvider} from '@features/auth';
 import {PageDefault} from '@features/layout'
+import {MockManager, Mock} from '@features/mock'
 import '../styles/globals.css'
 
-// TODO: Добавить по кнопке
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && false) {
-  const { worker } = require('../mock-browser') as {worker: SetupWorkerApi};
-  worker.start({onUnhandledRequest: 'bypass'});
+
+let mockManager: MockManager | null = null;
+if (MockManager.isAvailable()) {
+  mockManager = new MockManager();
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -16,10 +16,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AuthProvider>
       <PageDefault>
         <Component {...pageProps} />
+        {mockManager && <Mock mockManager={mockManager} />}
       </PageDefault>
     </AuthProvider>
   );
 }
-
 
 export default MyApp
