@@ -4,7 +4,7 @@ import styles from './Mock.module.css';
 
 export default function Mock(props: {mockManager: MockManager}) {
   const {mockManager} = props;
-  const [active, setActive] = React.useState(false);
+  const [active, setActive] = React.useState(mockManager.enabled);
   const onToggle = React.useCallback(() => {
     const nextActive = !active;
     setActive(nextActive);
@@ -20,7 +20,7 @@ export default function Mock(props: {mockManager: MockManager}) {
         <input
           type="button"
           onClick={onToggle}
-          value={active ? 'Выключить' : 'Включить'}
+          value={active ? 'Выключить моки' : 'Включить моки'}
         />
       </form>
     </div>
