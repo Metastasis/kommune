@@ -3,5 +3,5 @@ h3:not([class]) {
 }
 
 form > * + * {
-  margin-top: var(--spacing-large);
+  margin-top: var(--spacing-xl);
 }

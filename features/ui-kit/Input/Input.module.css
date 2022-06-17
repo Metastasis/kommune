@@ -6,8 +6,8 @@
 }
 
 .label {
+  @mixin textDefault;
   width: 100%;
-  margin-bottom: 4px;
 }
 
 .input {
@@ -15,6 +15,7 @@
   -webkit-appearance: none;
   box-shadow: none;
   outline: none;
+  margin-top: var(--spacing-xs);
   border: thin solid var(--color-border);
   border-radius: var(--border-radius);
   background-color: var(--color-bg-primary);
