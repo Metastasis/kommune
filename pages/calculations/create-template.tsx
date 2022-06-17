@@ -2,7 +2,7 @@ import React from 'react';
 import type { NextPage } from 'next'
 import {useForm, SubmitHandler} from 'react-hook-form';
 import {Field} from '@features/ui-form';
-import {Input, CheckboxGroup, Location} from '@features/ui-kit';
+import {Input, CheckboxGroup, Location, ButtonPrimary} from '@features/ui-kit';
 
 type Inputs = {
   title: string,
@@ -51,7 +51,7 @@ const CreateCalculation: NextPage = () => {
       {/*  </div>*/}
       {/*))}*/}
       {/*{errors.services && <p>{errors.services?.at(0)?.message}</p>}*/}
-      <input type="submit" value="Создать" />
+      <ButtonPrimary type="submit">Создать</ButtonPrimary>
     </form>
   );
 }

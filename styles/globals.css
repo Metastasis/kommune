@@ -20,6 +20,7 @@ a {
 :root {
   --color-white: #ffffff;
   --color-border: #1d3557;
+  --color-border-hover: #457b9d;
   --color-focus: #457b9d;
   --color-hover: #a8dadc;
   --color-bg-primary: #f1faee;

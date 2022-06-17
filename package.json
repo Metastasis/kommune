@@ -12,6 +12,7 @@
     "@ory/client": "0.0.1-alpha.169",
     "@ory/integrations": "0.2.5",
     "axios": "0.26.0",
+    "detect-keyboard-user": "1.0.1",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-dom": "18.0.0",
