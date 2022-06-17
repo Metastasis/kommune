@@ -1,0 +1,7 @@
+h3:not([class]) {
+  @mixin heading3;
+}
+
+form > * + * {
+  margin-top: var(--spacing-large);
+}

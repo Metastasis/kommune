@@ -12,5 +12,21 @@ a {
 }
 
 * {
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
+}
+
+:root {
+  --color-white: #ffffff;
+  --color-border: #1d3557;
+  --color-focus: #457b9d;
+  --color-hover: #a8dadc;
+  --color-bg-primary: #f1faee;
+  --color-bg-error: #ae2012;
+  --color-text-error: #e63946;
+  --color-text-primary: #000814;
+  --color-text-secondary: #8d99ae;
+  --border-radius: 4px;
+  --spacing-large: 20px;
 }

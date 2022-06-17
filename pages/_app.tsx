@@ -1,9 +1,11 @@
 import React from 'react';
-import type { AppProps } from 'next/app'
+import type { AppProps } from 'next/app';
 import {AuthProvider} from '@features/auth';
-import {PageDefault} from '@features/layout'
-import {MockManager, Mock} from '@features/mock'
-import '../styles/globals.css'
+import {PageDefault} from '@features/layout';
+import {MockManager, Mock} from '@features/mock';
+import '../styles/fonts.css';
+import '../styles/globals.css';
+import '../styles/typography.css';
 
 
 let mockManager: MockManager | null = null;

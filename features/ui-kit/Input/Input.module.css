@@ -1,0 +1,30 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+.label {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.input {
+  @mixin textDefault;
+  -webkit-appearance: none;
+  box-shadow: none;
+  outline: none;
+  border: thin solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-bg-primary);
+  width: 100%;
+  height: 100%;
+  &:-webkit-autofill {
+    color: var(--color-white);
+  }
+}
+
+.L .input {
+  padding: 8px 18px 13px 16px;
+}
