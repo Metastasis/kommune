@@ -4,13 +4,14 @@ import styles from './Checkbox.module.css';
 
 
 type Props = {
-  label: string
-  id: string
+  id?: string,
+  label: string,
+  value: string
 } & ReturnType<UseFormRegister<{[key: string]: unknown}>>;
 
 // eslint-disable-next-line react/display-name
 const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const {id, name, label, onChange, onBlur} = props;
+  const {id, value, label, name, onChange, onBlur} = props;
   return (
     <div className={styles.root}>
       <input
@@ -20,6 +21,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         name={name}
         onChange={onChange}
         onBlur={onBlur}
+        value={value}
       />
       <label htmlFor={id}>{label}</label>
     </div>

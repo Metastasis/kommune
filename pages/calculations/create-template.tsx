@@ -9,7 +9,7 @@ import {Input, Checkbox, ButtonPrimary} from '@features/ui-kit';
 type Inputs = {
   title: string,
   location: string,
-  services: string[]
+  services: string
 };
 
 const schema = {
@@ -47,10 +47,11 @@ const CreateCalculation: NextPage = () => {
       {services.data?.map(service => (
         <Field
           key={service.id}
-          error={errors[schema.services.name]?.at(0)?.message}
+          error={errors[schema.services.name]?.message}
         >
           <Checkbox
             {...register(schema.services.name, schema.services)}
+            value={service.id}
             label={service.title}
             id={service.id}
           />
