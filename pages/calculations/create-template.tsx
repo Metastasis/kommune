@@ -4,7 +4,7 @@ import {useForm, SubmitHandler} from 'react-hook-form';
 import useSwr from 'swr';
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
-import {Input, Checkbox, ButtonPrimary} from '@features/ui-kit';
+import {Input, Checkbox, ButtonPrimary, Autocomplete} from '@features/ui-kit';
 
 type Inputs = {
   title: string,
@@ -31,6 +31,12 @@ const CreateCalculation: NextPage = () => {
   const services = useSwr('allServices', getAllServices)
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+  const locations = [
+    {value: 'moscow', text: 'Москва'},
+    {value: 'saint-petersburg', text: 'Санкт-Петербург'},
+    {value: 'samara', text: 'Самара'},
+    {value: 'saratov', text: 'Саратов'},
+  ]
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>
@@ -42,7 +48,11 @@ const CreateCalculation: NextPage = () => {
       <Field
         error={errors[schema.location.name]?.message}
       >
-        <Input {...register(schema.location.name, schema.location)} label="Населенный пункт" />
+        <Autocomplete
+          {...register(schema.location.name, schema.location)}
+          label="Населенный пункт"
+          items={locations}
+        />
       </Field>
       {services.data?.map(service => (
         <Field
