@@ -1,1 +1,1 @@
-export {default} from './Location';
+export {default, type SelectItem} from './Location';

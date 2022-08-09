@@ -4,7 +4,8 @@ import {useForm, SubmitHandler} from 'react-hook-form';
 import useSwr from 'swr';
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
-import {Input, Checkbox, ButtonPrimary, Autocomplete} from '@features/ui-kit';
+import {FormInput, Checkbox, ButtonPrimary, Autocomplete} from '@features/ui-kit';
+import Location, {type SelectItem} from '@features/ui-kit/Location';
 
 type Inputs = {
   title: string,
@@ -19,7 +20,15 @@ const schema = {
   },
   location: {
     name: 'location' as 'location',
-    required: 'Укажите населенный пункт'
+    validate: (value: string, items: SelectItem[]) => {
+      if (!value) {
+        return 'Укажите город'
+      }
+      if (!items.find(item => item.text === value)) {
+        return 'Укажите город из списка'
+      }
+      return ''
+    }
   },
   services: {
     name: 'services' as 'services',
@@ -29,7 +38,7 @@ const schema = {
 
 const CreateCalculation: NextPage = () => {
   const services = useSwr('allServices', getAllServices)
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+  const { register, handleSubmit, formState: { errors }, control } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
   const locations = [
     {value: 'moscow', text: 'Москва'},
@@ -43,13 +52,13 @@ const CreateCalculation: NextPage = () => {
       <Field
         error={errors[schema.title.name]?.message}
       >
-        <Input {...register(schema.title.name, schema.title)} label="Название" />
+        <FormInput {...register(schema.title.name, schema.title)} label="Название" />
       </Field>
       <Field
         error={errors[schema.location.name]?.message}
       >
         <Autocomplete
-          {...register(schema.location.name, schema.location)}
+          {...register(schema.location.name, {validate: (value) => schema.location.validate(value, locations)})}
           label="Населенный пункт"
           items={locations}
         />

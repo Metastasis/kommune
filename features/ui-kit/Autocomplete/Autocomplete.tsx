@@ -1,59 +1,68 @@
 import React, {FocusEventHandler} from 'react';
-import { UseFormRegister } from 'react-hook-form';
-import Input from '../Input';
+import FormInput from '../FormInput';
 import styles from './Autocomplete.module.css';
+import {ChangeHandler, UseFormRegister} from 'react-hook-form';
 
-interface SelectItem {
-  value: string,
+
+export interface SelectItem {
+  value: string
   text: string
 }
 
-interface Props {
-  name: string,
-  // inputValue: string
-  items: SelectItem[],
-  label: string,
-  loading?: boolean,
-  disabled?: boolean,
-  onSelect?: (item: SelectItem) => void,
+interface P {
+  name: string
+  inputValue?: string
+  items: SelectItem[]
+  label: string
+  onChange: ChangeHandler
+  onBlur: ChangeHandler
+  onSelect?: (item: SelectItem | null) => void
+  loading?: boolean
 }
 
-type FormProps = Props & ReturnType<UseFormRegister<{[key: string]: unknown}>>;
-
-// eslint-disable-next-line react/display-name
-const Autocomplete = React.forwardRef<HTMLInputElement, FormProps>((props, ref) => {
+type Props = P & ReturnType<UseFormRegister<{[key: string]: unknown}>>
+export default React.forwardRef<HTMLInputElement, Props>(function Autocomplete(props, ref) {
   const {
     name,
+    // inputValue,
     items,
     loading,
     label,
-    disabled,
     onChange,
     onBlur,
     onSelect,
   } = props
   const [focused, setFocused] = React.useState(false)
   const rootRef = React.useRef<HTMLDivElement>(null)
+  // TODO: opened переделать на стейт
   const opened = items.length > 0 && focused && !loading
   const onFocus = () => setFocused(true)
-  const onChangeBlur: FocusEventHandler<HTMLElement> = (event: any) => {
+  const onChangeBlur: FocusEventHandler<HTMLElement> = (event) => {
+    // if (onSelect && !items.find(item => item.text === inputValue)) {
+    //   onSelect(null)
+    // }
     if (!rootRef.current?.contains(event.relatedTarget) && opened) {
       setFocused(false)
     }
   }
   const onSelectItem = (selectedItem: SelectItem) => {
+    const input = rootRef.current?.querySelector('input')
+    if (input && input.value !== selectedItem.text) {
+      input.value = selectedItem.text
+      const changeEvent = new Event('input', {cancelable: true, bubbles: true})
+      input.dispatchEvent(changeEvent)
+    }
     if (onSelect) onSelect(selectedItem)
   }
   return (
     <div ref={rootRef} className={styles.root} onBlur={onChangeBlur}>
-      <Input
+      <FormInput
         ref={ref}
         name={name}
         label={label}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        disabled={disabled}
       />
       {opened && (
         <div className={styles.dropdown}>
@@ -72,5 +81,3 @@ const Autocomplete = React.forwardRef<HTMLInputElement, FormProps>((props, ref) 
     </div>
   )
 })
-
-export default Autocomplete

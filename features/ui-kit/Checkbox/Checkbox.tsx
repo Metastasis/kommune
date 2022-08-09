@@ -9,8 +9,7 @@ type Props = {
   value: string
 } & ReturnType<UseFormRegister<{[key: string]: unknown}>>;
 
-// eslint-disable-next-line react/display-name
-const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
+export default React.forwardRef<HTMLInputElement, Props>(function Checkbox(props, ref) {
   const {id, value, label, name, onChange, onBlur} = props;
   return (
     <div className={styles.root}>
@@ -27,5 +26,3 @@ const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
     </div>
   )
 });
-
-export default Checkbox;

@@ -1,16 +1,21 @@
-import React, {FocusEventHandler} from 'react';
-import { UseFormRegister } from 'react-hook-form';
+import React, {ChangeEventHandler, FocusEventHandler} from 'react';
 import styles from './Input.module.css';
 
 
 type Props = {
+  name: string,
   label: string,
+  value?: string,
+  onChange: (value: string, event: Pick<InputEvent, 'target' | 'type'>) => void
+  onBlur?: FocusEventHandler<HTMLInputElement>
   onFocus?: FocusEventHandler<HTMLInputElement>
-} & ReturnType<UseFormRegister<{[key: string]: unknown}>>;
+};
 
-// eslint-disable-next-line react/display-name
-const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { name, label, onChange, onFocus, onBlur } = props;
+export default React.forwardRef<HTMLInputElement, Props>(function Input(props, ref) {
+  const { name, label, value, onChange, onFocus, onBlur } = props;
+  const handleChange: ChangeEventHandler<HTMLInputElement> = React.useCallback((event) => {
+    onChange(event.target.value, event)
+  }, [onChange])
   return (
     <div className={`${styles.root} ${styles.L}`}>
       <label className={styles.label}>{label}</label>
@@ -18,12 +23,11 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         className={styles.input}
         ref={ref}
         name={name}
-        onChange={onChange}
+        value={value}
+        onChange={handleChange}
         onFocus={onFocus}
         onBlur={onBlur}
       />
     </div>
   )
 });
-
-export default Input;
