@@ -32,17 +32,22 @@ export default React.forwardRef<HTMLInputElement, Props>(function Autocomplete(p
     onBlur,
     onSelect,
   } = props
+  const [opened, setOpened] = React.useState(false)
   const [focused, setFocused] = React.useState(false)
   const rootRef = React.useRef<HTMLDivElement>(null)
-  // TODO: opened переделать на стейт
-  const opened = items.length > 0 && focused && !loading
-  const onFocus = () => setFocused(true)
+  const onFocus = () => {
+    if (!opened && items.length && !loading) {
+      setOpened(true)
+    }
+    setFocused(true)
+  }
   const onChangeBlur: FocusEventHandler<HTMLElement> = (event) => {
     // if (onSelect && !items.find(item => item.text === inputValue)) {
     //   onSelect(null)
     // }
     if (!rootRef.current?.contains(event.relatedTarget) && opened) {
       setFocused(false)
+      setOpened(false)
     }
   }
   const onSelectItem = (selectedItem: SelectItem) => {
@@ -50,9 +55,12 @@ export default React.forwardRef<HTMLInputElement, Props>(function Autocomplete(p
     if (input && input.value !== selectedItem.text) {
       input.value = selectedItem.text
       const changeEvent = new Event('input', {cancelable: true, bubbles: true})
+      changeEvent.value = 
       input.dispatchEvent(changeEvent)
+      onChange(selectedItem.text)
     }
     if (onSelect) onSelect(selectedItem)
+    setOpened(false);
   }
   return (
     <div ref={rootRef} className={styles.root} onBlur={onChangeBlur}>

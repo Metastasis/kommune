@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next'
-import {useForm, SubmitHandler} from 'react-hook-form';
+import {useForm, SubmitHandler, Controller} from 'react-hook-form';
 import useSwr from 'swr';
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
@@ -24,7 +24,7 @@ const schema = {
       if (!value) {
         return 'Укажите город'
       }
-      if (!items.find(item => item.text === value)) {
+      if (!items.find(item => item.value === value)) {
         return 'Укажите город из списка'
       }
       return ''
@@ -38,7 +38,7 @@ const schema = {
 
 const CreateCalculation: NextPage = () => {
   const services = useSwr('allServices', getAllServices)
-  const { register, handleSubmit, formState: { errors }, control } = useForm<Inputs>();
+  const { register, handleSubmit, formState: { errors }, getValues, control} = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
   const locations = [
     {value: 'moscow', text: 'Москва'},
@@ -46,6 +46,8 @@ const CreateCalculation: NextPage = () => {
     {value: 'samara', text: 'Самара'},
     {value: 'saratov', text: 'Саратов'},
   ]
+  console.log(errors);
+  console.log(getValues());
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>
@@ -57,10 +59,19 @@ const CreateCalculation: NextPage = () => {
       <Field
         error={errors[schema.location.name]?.message}
       >
-        <Autocomplete
-          {...register(schema.location.name, {validate: (value) => schema.location.validate(value, locations)})}
-          label="Населенный пункт"
-          items={locations}
+        <Controller
+          name={schema.location.name}
+          control={control}
+          rules={{
+            validate: (value) => schema.location.validate(value, locations)
+          }}
+          render={({field}) => (
+            <Autocomplete
+              {...field}
+              label="Населенный пункт"
+              suggestions={locations}
+            />
+          )}
         />
       </Field>
       {services.data?.map(service => (
