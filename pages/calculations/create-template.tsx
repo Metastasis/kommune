@@ -1,11 +1,12 @@
 import React from 'react';
 import type { NextPage } from 'next'
-import {useForm, SubmitHandler, Controller} from 'react-hook-form';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import useSwr from 'swr';
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
+import {create as createTemplate} from '@features/template';
 import {FormInput, Checkbox, ButtonPrimary, Autocomplete} from '@features/ui-kit';
-import Location, {type SelectItem} from '@features/ui-kit/Location';
+import {type SelectItem} from '@features/ui-kit/Location';
 
 type Inputs = {
   title: string,
@@ -39,15 +40,17 @@ const schema = {
 const CreateCalculation: NextPage = () => {
   const services = useSwr('allServices', getAllServices)
   const { register, handleSubmit, formState: { errors }, getValues, control} = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = data => {
+    createTemplate(data as any)
+  }
   const locations = [
     {value: 'moscow', text: 'Москва'},
     {value: 'saint-petersburg', text: 'Санкт-Петербург'},
     {value: 'samara', text: 'Самара'},
     {value: 'saratov', text: 'Саратов'},
   ]
+  // TODO: пофиксить ошибки
   console.log(errors);
-  console.log(getValues());
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>
