@@ -3,12 +3,21 @@ import styles from './Button.module.css';
 
 
 interface Props {
-  type: 'submit' | 'button'
+  type: 'submit' | 'button',
+  disabled?: boolean
 }
 
 const Button: React.FC<React.PropsWithChildren<Props>> = (props) => {
-  const {type = 'button', children} = props;
-  return <button className={`${styles.root} ${styles.L}`} type={type}>{children}</button>
+  const {type = 'button', children, disabled} = props;
+  return (
+    <button
+      className={`${styles.root} ${styles.L}`}
+      type={type}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  )
 };
 
 export default Button;

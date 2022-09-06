@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next'
-import {useForm, Controller, SubmitHandler} from 'react-hook-form';
+import {useForm, Controller} from 'react-hook-form';
 import useSwr from 'swr';
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
@@ -42,10 +42,18 @@ const schema = {
 };
 
 const CreateCalculation: NextPage = () => {
+  const [status, setStatus] = React.useState<null | 'loading' | 'success' | 'error'>(null)
   const services = useSwr('allServices', getAllServices)
   const { register, handleSubmit, formState: { errors }, control} = useForm<Inputs>();
-  const onSubmit = (data: Inputs) => {
-    createTemplate((data as any) as Inputs2)
+  const onSubmit = async (data: Inputs) => {
+    setStatus('loading')
+    try {
+      const result = await createTemplate((data as any) as Inputs2)
+    } catch (err) {
+      setStatus('error')
+      throw err
+    }
+    setStatus('success')
   }
   const locations = [
     {value: 'moscow', text: 'Москва'},
@@ -57,7 +65,11 @@ const CreateCalculation: NextPage = () => {
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>
       <Field error={errors[schema.title.name]?.message}>
-        <FormInput {...register(schema.title.name, schema.title)} label="Название" />
+        <FormInput
+          {...register(schema.title.name, schema.title)}
+          label="Название"
+          disabled={status === 'loading'}
+        />
       </Field>
       <Field error={errors[schema.location.name]?.message}>
         <Controller
@@ -71,6 +83,7 @@ const CreateCalculation: NextPage = () => {
               {...field}
               label="Населенный пункт"
               suggestions={locations}
+              disabled={status === 'loading'}
             />
           )}
         />
@@ -83,10 +96,14 @@ const CreateCalculation: NextPage = () => {
             value={service.id}
             label={service.title}
             id={service.id}
+            disabled={status === 'loading'}
           />
         ))}
       </Field>
-      <ButtonPrimary type="submit">Создать</ButtonPrimary>
+      <ButtonPrimary type="submit" disabled={status === 'loading'}>
+        Создать
+      </ButtonPrimary>
+      {status === 'error' ? <div>Не удалось создать. Попробуйте позже</div> : null}
     </form>
   );
 }

@@ -10,10 +10,11 @@ interface Props {
   label: string,
   suggestions: Array<{text: string, value: string}>,
   onChange: (ev: any) => void
+  disabled?: boolean
 }
 
 const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomplete(props, ref) {
-  const {suggestions, name, onChange} = props;
+  const {suggestions, name, disabled, onChange} = props;
   // The active selection's index
   const [activeSuggestion, setActiveSuggestion] = React.useState(0)
   // The suggestions that match the user's input
@@ -74,7 +75,7 @@ const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomp
     if (!item) onChange('')
   }
   let suggestionsListComponent;
-  if (showSuggestions && userInput) {
+  if (showSuggestions && userInput && !disabled) {
     if (filteredSuggestions.length) {
       suggestionsListComponent = (
         <ul className="suggestions">
@@ -94,7 +95,7 @@ const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomp
           })}
         </ul>
       );
-    } else {
+    } else if (!disabled) {
       suggestionsListComponent = (
         <div className="no-suggestions">
           <em>No suggestions, you&rsquo;re on your own!</em>
@@ -112,6 +113,7 @@ const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomp
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
         value={userInput}
+        disabled={disabled}
       />
       {suggestionsListComponent}
     </>
