@@ -69,6 +69,10 @@ const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomp
       setActiveSuggestion(activeSuggestion + 1)
     }
   }, [activeSuggestion, filteredSuggestions, setActiveSuggestion, setShowSuggestions, setUserInput]);
+  const handleBlur = () => {
+    const item = suggestions.find(s => s.text === userInput)
+    if (!item) onChange('')
+  }
   let suggestionsListComponent;
   if (showSuggestions && userInput) {
     if (filteredSuggestions.length) {
@@ -106,6 +110,7 @@ const Autocomplete = React.forwardRef<HTMLInputElement, Props>(function Autocomp
         type="text"
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         value={userInput}
       />
       {suggestionsListComponent}

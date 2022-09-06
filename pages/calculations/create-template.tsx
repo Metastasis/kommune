@@ -13,6 +13,11 @@ type Inputs = {
   location: string,
   services: string
 };
+type Inputs2 = {
+  title: string,
+  location: string,
+  services: string[]
+};
 
 const schema = {
   title: {
@@ -28,7 +33,6 @@ const schema = {
       if (!items.find(item => item.value === value)) {
         return 'Укажите город из списка'
       }
-      return ''
     }
   },
   services: {
@@ -39,9 +43,9 @@ const schema = {
 
 const CreateCalculation: NextPage = () => {
   const services = useSwr('allServices', getAllServices)
-  const { register, handleSubmit, formState: { errors }, getValues, control} = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = data => {
-    createTemplate(data as any)
+  const { register, handleSubmit, formState: { errors }, control} = useForm<Inputs>();
+  const onSubmit = (data: Inputs) => {
+    createTemplate((data as any) as Inputs2)
   }
   const locations = [
     {value: 'moscow', text: 'Москва'},
@@ -49,19 +53,13 @@ const CreateCalculation: NextPage = () => {
     {value: 'samara', text: 'Самара'},
     {value: 'saratov', text: 'Саратов'},
   ]
-  // TODO: пофиксить ошибки
-  console.log(errors);
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>
-      <Field
-        error={errors[schema.title.name]?.message}
-      >
+      <Field error={errors[schema.title.name]?.message}>
         <FormInput {...register(schema.title.name, schema.title)} label="Название" />
       </Field>
-      <Field
-        error={errors[schema.location.name]?.message}
-      >
+      <Field error={errors[schema.location.name]?.message}>
         <Controller
           name={schema.location.name}
           control={control}
@@ -77,19 +75,17 @@ const CreateCalculation: NextPage = () => {
           )}
         />
       </Field>
-      {services.data?.map(service => (
-        <Field
-          key={service.id}
-          error={errors[schema.services.name]?.message}
-        >
+      <Field error={errors[schema.services.name]?.message}>
+        {services.data?.map(service => (
           <Checkbox
+            key={service.id}
             {...register(schema.services.name, schema.services)}
             value={service.id}
             label={service.title}
             id={service.id}
           />
-        </Field>
-      ))}
+        ))}
+      </Field>
       <ButtonPrimary type="submit">Создать</ButtonPrimary>
     </form>
   );
