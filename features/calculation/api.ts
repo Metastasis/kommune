@@ -18,3 +18,14 @@ export function search() {
       createdAt: new Date(item.createdAt)
     })));
 }
+
+interface CalculationParams {
+
+}
+interface CalculationResponse {
+
+}
+export function create(calculation: CalculationParams) {
+  return axios.post<CalculationResponse>('/api/calculation/create', calculation)
+    .then(({data}) => data);
+}

@@ -1,0 +1,38 @@
+.root {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  width: 100%;
+  top: 72px;
+  left: 0;
+  max-height: 200px;
+  overflow: auto;
+  border: thin solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-bg-primary);
+}
+
+.dropdown > .dropdownItem + .dropdownItem {
+  margin-top: 6px;
+}
+
+.dropdownItem {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.suggestions {
+  width: 100%;
+  border: thin solid var(--color-border);
+}
+
+.suggestions > li {
+  list-style: none;
+  padding: 6px 4px;
+}
+
+.active {
+  opacity: 0.75;
+}

@@ -18,14 +18,13 @@ const Location = (props: Props) => {
       name={name}
       control={control}
       rules={{validate}}
-      render={({field: {onChange, onBlur, ref}}) => (
+      render={({field: {onChange, ref}}) => (
         <Autocomplete
           ref={ref}
           name={name}
           label={label}
-          items={items}
-          onChange={onChange}
-          onBlur={onBlur}
+          suggestions={items}
+          onChange={onChange as any}
         />
       )}
     />
@@ -33,4 +32,4 @@ const Location = (props: Props) => {
 };
 
 export default Location;
-export type SelectItem = Item;
+export type SelectItem<TT = void> = Item<TT>;

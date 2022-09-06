@@ -1,10 +1,23 @@
 import { rest } from 'msw';
-import {TemplateParams} from './api'
+import {TemplateParams, SearchParams} from './api'
+import {getStorage as getServices, Service} from '@features/services';
+
 
 const STORAGE_ITEM = '_kommune_templates';
+const defaultServices = getServices().items.reduce((acc, service) => {
+  if (['1', '2', '3', '4', '5'].includes(service.id)) {
+    acc.push(service);
+  }
+  return acc;
+}, [] as Service[]);
 const DEFAULT_STORAGE: Storage = {
   items: [
-    {id: '1', title: 'Сокольники', location: '', services: []},
+    {
+      id: '1',
+      title: 'sokolniki',
+      location: 'moscow',
+      services: defaultServices
+    },
   ]
 };
 
@@ -25,6 +38,25 @@ export const handlers = [
     return res(
       ctx.status(200),
       ctx.json(template)
+    )
+  }),
+  rest.post('/api/search-template', (req, res, ctx) => {
+    const storage = getStorage();
+    const params = req.body as SearchParams
+    const services = getServices();
+    const mapServices = services.items.reduce((acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    }, {} as {[key: string]: Service})
+    const results = storage.items
+      .filter(item => item.title.toLowerCase().includes(params.title.toLowerCase()))
+      .map(item => ({
+        ...item,
+        services: item.services.map(service => mapServices[service.id])
+      }))
+    return res(
+      ctx.status(200),
+      ctx.json(results)
     )
   })
 ];

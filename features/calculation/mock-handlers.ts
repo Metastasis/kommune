@@ -45,22 +45,6 @@ export const handlers = [
       ctx.json(item),
     )
   }),
-  rest.post<CreateTemplateBody>('/api/calculation/create-template', (req, res, ctx) => {
-    const calculationStorage = getCalculations();
-    const item: CalculationTemplate = {
-      id: uuid(),
-      title: req.body.title,
-      services: req.body.services,
-      createdAt: new Date(),
-      status: 'new'
-    }
-    calculationStorage.templates.push(item);
-    saveCalculations(calculationStorage);
-    return res(
-      ctx.status(200),
-      ctx.json(item),
-    )
-  }),
   rest.post('/api/calculation/archive', (req, res, ctx) => {
     const item = {
       id: '5',

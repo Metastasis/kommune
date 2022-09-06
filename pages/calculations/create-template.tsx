@@ -2,6 +2,7 @@ import React from 'react';
 import type { NextPage } from 'next'
 import {useForm, Controller} from 'react-hook-form';
 import useSwr from 'swr';
+import {useRouter} from 'next/router'
 import {getAllServices} from '@features/services';
 import {Field} from '@features/ui-form';
 import {create as createTemplate} from '@features/template';
@@ -43,17 +44,19 @@ const schema = {
 
 const CreateCalculation: NextPage = () => {
   const [status, setStatus] = React.useState<null | 'loading' | 'success' | 'error'>(null)
+  const router = useRouter();
   const services = useSwr('allServices', getAllServices)
   const { register, handleSubmit, formState: { errors }, control} = useForm<Inputs>();
   const onSubmit = async (data: Inputs) => {
     setStatus('loading')
     try {
-      const result = await createTemplate((data as any) as Inputs2)
+      await createTemplate((data as any) as Inputs2)
     } catch (err) {
       setStatus('error')
       throw err
     }
     setStatus('success')
+    router.push('/calculations')
   }
   const locations = [
     {value: 'moscow', text: 'Москва'},

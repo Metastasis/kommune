@@ -4,10 +4,9 @@ import styles from './Autocomplete.module.css';
 import {ChangeHandler, UseFormRegister} from 'react-hook-form';
 
 
-export interface SelectItem<T = void> {
+export interface SelectItem {
   value: string
   text: string
-  data?: T
 }
 
 interface P {
@@ -25,6 +24,7 @@ type Props = P & ReturnType<UseFormRegister<{[key: string]: unknown}>>
 export default React.forwardRef<HTMLInputElement, Props>(function Autocomplete(props, ref) {
   const {
     name,
+    // inputValue,
     items,
     loading,
     label,
@@ -33,14 +33,20 @@ export default React.forwardRef<HTMLInputElement, Props>(function Autocomplete(p
     onSelect,
   } = props
   const [opened, setOpened] = React.useState(false)
+  const [focused, setFocused] = React.useState(false)
   const rootRef = React.useRef<HTMLDivElement>(null)
   const onFocus = () => {
     if (!opened && items.length && !loading) {
       setOpened(true)
     }
+    setFocused(true)
   }
   const onChangeBlur: FocusEventHandler<HTMLElement> = (event) => {
+    // if (onSelect && !items.find(item => item.text === inputValue)) {
+    //   onSelect(null)
+    // }
     if (!rootRef.current?.contains(event.relatedTarget) && opened) {
+      setFocused(false)
       setOpened(false)
     }
   }

@@ -1,2 +1,2 @@
-export {default as mockHandlers} from './mock-handlers';
+export {default as mockHandlers, getStorage} from './mock-handlers';
 export * from './api'
