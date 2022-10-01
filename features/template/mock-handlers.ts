@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import {TemplateParams, SearchParams} from './api'
+import {TemplateResponse, SearchParams} from './api'
 import {getStorage as getServices, Service} from '@features/services';
 
 
@@ -24,14 +24,14 @@ const DEFAULT_STORAGE: Storage = {
 interface Storage {
   items: Template[]
 }
-interface Template extends TemplateParams {
+interface Template extends TemplateResponse {
   id: string,
 }
 
 export const handlers = [
   rest.post('/api/create-template', (req, res, ctx) => {
     const storage = getStorage();
-    const params = req.body as TemplateParams
+    const params = req.body as TemplateResponse
     const template = {...params, id: String(Math.random())}
     storage.items.push(template)
     saveStorage(storage)

@@ -1,9 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {fetchTariffs, FeeValue, ElectricityTariff, Tariffs} from '@features/tariffs'
-import {Header, Footer} from '@features/layout'
 import {useAuth} from '@features/auth'
 import useSwr from 'swr'
 import styles from '../../styles/Home.module.css'

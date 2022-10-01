@@ -11,7 +11,6 @@ import {FormInput, AutocompleteControlled, ButtonPrimary} from '@features/ui-kit
 import {Field} from '@features/ui-form';
 import {type SelectItem} from '@features/ui-kit/Location';
 
-type Inputs = any;
 
 const CreateCalculation: NextPage = () => {
   const [suggestions, setSuggestions] = React.useState<SelectItem<TemplateResponse>[]>([])
@@ -32,8 +31,34 @@ const CreateCalculation: NextPage = () => {
       .then(results => setSuggestions(results))
       .catch(() => setSuggestions([]))
   }, [searchTerm])
+  return (
+    <div>
+      <h3>Расчет</h3>
+      <AutocompleteControlled
+        name="templateId"
+        label="Шаблон"
+        suggestions={suggestions}
+        value={searchTerm}
+        onChange={handleSearch}
+        onSelect={handleSelect}
+      />
+      {selected?.data?.services && (
+        <GeneratedForm services={selected.data.services} />
+      )}
+    </div>
+  );
+}
+
+export default CreateCalculation
+
+type Inputs = any;
+
+function GeneratedForm(props: {services: TemplateResponse['services']}) {
+  const {services} = props;
   const [status, setStatus] = React.useState<null | 'loading' | 'success' | 'error'>(null)
-  const {register, handleSubmit, formState: { errors }} = useForm()
+  const {register, handleSubmit, formState: { errors }} = useForm({
+    defaultValues: collectDefaultValues(services)
+  })
   const onSubmit = async (data: Inputs) => {
     setStatus('loading')
     try {
@@ -46,18 +71,7 @@ const CreateCalculation: NextPage = () => {
   }
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-      <h3>Расчет</h3>
-      <Field>
-        <AutocompleteControlled
-          name="templateId"
-          label="Шаблон"
-          suggestions={suggestions}
-          value={searchTerm}
-          onChange={handleSearch}
-          onSelect={handleSelect}
-        />
-      </Field>
-      {selected?.data?.services.map(s => s.ui.map(ui => {
+      {services.map(s => s.ui.map(ui => {
         if (ui.type === 'numberDiff') {
           const name = `${s.title}.${ui.previous.name}`;
           const error = get(errors, `${name}.message`);
@@ -103,7 +117,15 @@ const CreateCalculation: NextPage = () => {
       }))}
       <ButtonPrimary type="submit">Посчитать</ButtonPrimary>
     </form>
-  );
+  )
 }
 
-export default CreateCalculation
+function collectDefaultValues(services: TemplateResponse['services']) {
+  const result = {} as any;
+  services.forEach(s => s.ui.forEach(ui => {
+    if (ui.type === 'numberFixed') {
+      result[`${s.title}.${ui.name}`] = ui.value;
+    }
+  }, {} as any))
+  return result;
+}

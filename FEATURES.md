@@ -41,3 +41,43 @@ Value Object будут конкретные объекты услуг ЖКХ.
 Например, электричество. Этот Value Object сможет расчитать себя
 по конкретным данным, включать в себя предыдущие и текущие значения,
 проводить валидацию.
+
+###
+
+```json
+{
+  id: '2',
+  title: 'random',
+  location: {
+    // тут хранится общая для шаблона и налога локация
+    // в момент создания шаблона подгружаются все услуги для данной локации
+    country: 'russia',
+    city: 'moscow'
+  },
+  services: [
+    {
+      id: '3',
+      title: 'Вывоз мусора (БТИ)',
+      ui: [
+        {id: 'ui3', type: 'numberFixed', min: 0, name: 'value', value: 120}
+      ],
+      tax: {
+        // цены периодически меняются
+        price: 120,
+        calculationType: 'fixedValue',
+      }
+    },
+    {
+      id: '4',
+      title: 'Газ',
+      ui: [
+        {id: 'ui4', type: 'numberDiff', previous: {name: 'previous', min: 0}, current: {name: 'current', min: 0}}
+      ],
+      tax: {
+        coef: 1.01,
+        calculationType: 'differenceBetweenCurrentAndPrevious',
+      }
+    },
+  ]
+}
+```
