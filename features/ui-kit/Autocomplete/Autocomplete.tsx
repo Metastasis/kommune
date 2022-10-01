@@ -4,7 +4,7 @@ import styles from './Autocomplete.module.css';
 import {ChangeHandler, UseFormRegister} from 'react-hook-form';
 
 
-export interface SelectItem<T = void> {
+export interface SelectItem<T = undefined> {
   value: string
   text: string
   data?: T

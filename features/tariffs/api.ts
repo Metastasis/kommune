@@ -1,6 +1,8 @@
 import axios from 'axios'
-import {Tariffs} from './types'
+import {TariffByLocation} from './types'
 
 export function fetchTariffs(city: string) {
-  return axios.post<Tariffs>('/api/tariffs', {city}).then(d => d.data)
+  return axios
+    .post<TariffByLocation[]>('/api/tariffs', {country: 'russia', city})
+    .then(d => d.data)
 }

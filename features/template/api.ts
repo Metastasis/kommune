@@ -4,7 +4,10 @@ import {Service} from '@features/services';
 type ServiceId = Service['id']
 export type TemplateParams = {
   title: string
-  location: string
+  location: {
+    country: string,
+    city: string
+  }
   services: ServiceId[]
 }
 export type TemplateResponse = {

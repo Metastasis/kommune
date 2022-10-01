@@ -14,11 +14,6 @@ type Inputs = {
   location: string,
   services: string
 };
-type Inputs2 = {
-  title: string,
-  location: string,
-  services: string[]
-};
 
 const schema = {
   title: {
@@ -27,7 +22,7 @@ const schema = {
   },
   location: {
     name: 'location' as 'location',
-    validate: (value: string, items: SelectItem[]) => {
+    validate: (value: string, items: SelectItem<any>[]) => {
       if (!value) {
         return 'Укажите город'
       }
@@ -42,15 +37,30 @@ const schema = {
   }
 };
 
+const locations = [
+  {value: 'moscow', data: {country: 'russia', city: 'moscow'}, text: 'Москва'},
+  {value: 'saint-petersburg', data: {country: 'russia', city: 'saint-petersburg'}, text: 'Санкт-Петербург'},
+  {value: 'samara', data: {country: 'russia', city: 'samara'}, text: 'Самара'},
+  {value: 'saratov', data: {country: 'russia', city: 'saratov'}, text: 'Саратов'},
+]
 const CreateCalculation: NextPage = () => {
   const [status, setStatus] = React.useState<null | 'loading' | 'success' | 'error'>(null)
   const router = useRouter();
   const services = useSwr('allServices', getAllServices)
   const { register, handleSubmit, formState: { errors }, control} = useForm<Inputs>();
   const onSubmit = async (data: Inputs) => {
+    const location = locations.find(l => l.value === data.location);
+    if (!location) {
+      setStatus('error')
+      throw new Error('Location not found');
+    }
     setStatus('loading')
     try {
-      await createTemplate((data as any) as Inputs2)
+      await createTemplate({
+        ...data,
+        location: location.data,
+        services: data.services as any
+      })
     } catch (err) {
       setStatus('error')
       throw err
@@ -58,12 +68,6 @@ const CreateCalculation: NextPage = () => {
     setStatus('success')
     router.push('/calculations')
   }
-  const locations = [
-    {value: 'moscow', text: 'Москва'},
-    {value: 'saint-petersburg', text: 'Санкт-Петербург'},
-    {value: 'samara', text: 'Самара'},
-    {value: 'saratov', text: 'Саратов'},
-  ]
   return (
     <form method="POST" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <h3>Шаблон расчета</h3>

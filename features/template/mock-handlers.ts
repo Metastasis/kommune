@@ -1,21 +1,38 @@
 import { rest } from 'msw';
 import {TemplateResponse, SearchParams} from './api'
 import {getStorage as getServices, Service} from '@features/services';
+import {getStorage as getTariffs, TariffByLocation} from '@features/tariffs';
 
 
+interface ServiceWithTax extends Service {
+  tax: TariffByLocation['tax']
+}
 const STORAGE_ITEM = '_kommune_templates';
+const defaultLocation = {
+  country: 'russia',
+  city: 'moscow'
+};
+const defaultTariffs = getTariffs().items.filter(
+  t => t.location.country === defaultLocation.country && t.location.city === defaultLocation.city
+);
 const defaultServices = getServices().items.reduce((acc, service) => {
   if (['1', '2', '3', '4', '5'].includes(service.id)) {
-    acc.push(service);
+    const tariff = defaultTariffs.find(t => (
+      t.serviceId === service.id
+      && t.location.country === defaultLocation.country
+      && t.location.city === defaultLocation.city
+    ));
+    if (!tariff) return acc;
+    acc.push({...service, tax: tariff.tax});
   }
   return acc;
-}, [] as Service[]);
+}, [] as ServiceWithTax[]);
 const DEFAULT_STORAGE: Storage = {
   items: [
     {
       id: '1',
       title: 'sokolniki',
-      location: 'moscow',
+      location: defaultLocation,
       services: defaultServices
     },
   ]
@@ -44,6 +61,7 @@ export const handlers = [
     const storage = getStorage();
     const params = req.body as SearchParams
     const services = getServices();
+    const tariffs = getTariffs();
     const mapServices = services.items.reduce((acc, item) => {
       acc[item.id] = item;
       return acc;
@@ -52,7 +70,15 @@ export const handlers = [
       .filter(item => item.title.toLowerCase().includes(params.title.toLowerCase()))
       .map(item => ({
         ...item,
-        services: item.services.map(service => mapServices[service.id])
+        services: item.services.map(service => {
+          const tariff = tariffs.items.find(t => (
+            t.serviceId === service.id
+            && t.location.country === item.location.country
+            && t.location.city === item.location.city
+          ))
+          if (!tariff) return null;
+          return {...mapServices[service.id], tax: tariff.tax};
+        }).filter(Boolean)
       }))
     return res(
       ctx.status(200),

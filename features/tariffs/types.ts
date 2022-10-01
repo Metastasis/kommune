@@ -26,3 +26,20 @@ export interface Tariffs {
     electricCooker: ElectricityTariff,
   }
 }
+
+export interface TariffByLocation {
+  id: string,
+  serviceId: string,
+  title: string,
+  location: {
+    country: string,
+    city: string,
+  },
+  tax: {
+    value: number,
+    type: 'differenceBetweenCurrentAndPrevious'
+  } | {
+    price: number,
+    type: 'fixedValue'
+  }
+}

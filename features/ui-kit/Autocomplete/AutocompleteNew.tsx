@@ -8,7 +8,7 @@ import React, {
 interface Props {
   name: string,
   label: string,
-  suggestions: Array<{text: string, value: string}>,
+  suggestions: Array<{text: string, value: string, data?: Object}>,
   onChange: (ev: any) => void
   disabled?: boolean
 }
