@@ -20,9 +20,9 @@ const DEFAULT_STORAGE: Storage = {
     },
     {
       id: '3',
-      title: 'Вывоз мусора (БТИ)',
+      title: 'Обращение с ТКО',
       ui: [
-        {id: 'ui3', type: 'numberFixed', min: 0, name: 'value', value: 120}
+        {id: 'ui3', type: 'valueDependsOnFlatSquare', taxValue: {name: 'taxValue', value: 8.977690}, flatSquare: {name: 'flatSquare'}},
       ]
     },
     {

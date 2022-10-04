@@ -20,10 +20,21 @@ interface UiInputFixed {
   name: string,
   value: number
 }
+interface UiInputFlatSquare {
+  id: string,
+  type: 'valueDependsOnFlatSquare',
+  taxValue: {
+    name: string,
+    value: number
+  },
+  flatSquare: {
+    name: string,
+  },
+}
 export interface Service {
   id: Uuid,
   title: string,
-  ui: Array<UiInputDifference | UiInputFixed>
+  ui: Array<UiInputDifference | UiInputFixed | UiInputFlatSquare>
 }
 
 export function getAllServices() {

@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import {TemplateResponse, SearchParams} from './api'
+import {TemplateResponse, TemplateParams, SearchParams} from './api'
 import {getStorage as getServices, Service} from '@features/services';
 import {getStorage as getTariffs, TariffByLocation} from '@features/tariffs';
 
@@ -33,7 +33,10 @@ const DEFAULT_STORAGE: Storage = {
       id: '1',
       title: 'sokolniki',
       location: defaultLocation,
-      services: defaultServices
+      services: defaultServices,
+      flat: {
+        square: 35.3
+      }
     },
   ]
 };
@@ -48,8 +51,25 @@ interface Template extends TemplateResponse {
 export const handlers = [
   rest.post('/api/create-template', (req, res, ctx) => {
     const storage = getStorage();
-    const params = req.body as TemplateResponse
-    const template = {...params, id: String(Math.random())}
+    const {flatSquare, services: servicesIds, ...params} = req.body as TemplateParams
+    const services = getServices().items.reduce((acc, s) => {
+      if (servicesIds.includes(s.id)) {
+        const tariff = defaultTariffs.find(t => (
+          t.serviceId === s.id
+          && t.location.country === params.location.country
+          && t.location.city === params.location.city
+        ));
+        if (!tariff) return acc;
+        acc.push({...s, tax: tariff.tax});
+      }
+      return acc;
+    }, [] as ServiceWithTax[]);
+    const template: TemplateResponse = {
+      ...params,
+      services,
+      flat: {square: flatSquare},
+      id: String(Math.random())
+    };
     storage.items.push(template)
     saveStorage(storage)
     return res(
@@ -70,15 +90,16 @@ export const handlers = [
       .filter(item => item.title.toLowerCase().includes(params.title.toLowerCase()))
       .map(item => ({
         ...item,
-        services: item.services.map(service => {
+        services: item.services.reduce((acc, service) => {
           const tariff = tariffs.items.find(t => (
             t.serviceId === service.id
             && t.location.country === item.location.country
             && t.location.city === item.location.city
           ))
-          if (!tariff) return null;
-          return {...mapServices[service.id], tax: tariff.tax};
-        }).filter(Boolean)
+          if (!tariff) return acc;
+          acc.push({...mapServices[service.id], tax: tariff.tax});
+          return acc;
+        }, [] as ServiceWithTax[])
       }))
     return res(
       ctx.status(200),

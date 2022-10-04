@@ -2,6 +2,9 @@ import axios from 'axios'
 import {Service} from '@features/services';
 
 type ServiceId = Service['id']
+interface Flat {
+  square: number
+}
 export type TemplateParams = {
   title: string
   location: {
@@ -9,11 +12,13 @@ export type TemplateParams = {
     city: string
   }
   services: ServiceId[]
+  flatSquare: Flat['square']
 }
 export type TemplateResponse = {
   title: TemplateParams['title'],
   location: TemplateParams['location'],
-  services: Service[]
+  services: Service[],
+  flat: Flat
   id: string
 }
 export function create(template: TemplateParams) {

@@ -41,5 +41,8 @@ export interface TariffByLocation {
   } | {
     price: number,
     type: 'fixedValue'
+  } | {
+    value: number,
+    type: 'valueDependsOnFlatSquare'
   }
 }

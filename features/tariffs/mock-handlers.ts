@@ -13,7 +13,7 @@ const DEFAULT_STORAGE: {items: TariffByLocation[]} = {
         city: 'moscow',
       },
       tax: {
-        value: 1.01,
+        value: 45.61,
         type: 'differenceBetweenCurrentAndPrevious'
       }
     },
@@ -26,21 +26,21 @@ const DEFAULT_STORAGE: {items: TariffByLocation[]} = {
         city: 'moscow',
       },
       tax: {
-        value: 1.51,
+        value: 210.49,
         type: 'differenceBetweenCurrentAndPrevious'
       }
     },
     {
       id: '33',
       serviceId: '3',
-      title: 'Вывоз мусора (БТИ)',
+      title: 'Обращение с ТКО',
       location: {
         country: 'russia',
         city: 'moscow',
       },
       tax: {
-        price: 150,
-        type: 'fixedValue'
+        value: 8.977690,
+        type: 'valueDependsOnFlatSquare'
       }
     },
     {
@@ -65,7 +65,7 @@ const DEFAULT_STORAGE: {items: TariffByLocation[]} = {
         city: 'moscow',
       },
       tax: {
-        value: 1.31,
+        value: 5.93,
         type: 'differenceBetweenCurrentAndPrevious'
       }
     },
@@ -78,7 +78,7 @@ const DEFAULT_STORAGE: {items: TariffByLocation[]} = {
         city: 'moscow',
       },
       tax: {
-        value: 1.21,
+        value: 6.17,
         type: 'differenceBetweenCurrentAndPrevious'
       }
     },

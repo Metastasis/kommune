@@ -12,6 +12,7 @@ import {type SelectItem} from '@features/ui-kit/Location';
 type Inputs = {
   title: string,
   location: string,
+  flatSquare: number,
   services: string
 };
 
@@ -30,6 +31,10 @@ const schema = {
         return 'Укажите город из списка'
       }
     }
+  },
+  flatSquare: {
+    name: 'flatSquare' as 'flatSquare',
+    required: 'Укажите площадь квартиры'
   },
   services: {
     name: 'services' as 'services',
@@ -75,6 +80,13 @@ const CreateCalculation: NextPage = () => {
         <FormInput
           {...register(schema.title.name, schema.title)}
           label="Название"
+          disabled={status === 'loading'}
+        />
+      </Field>
+      <Field error={errors[schema.flatSquare.name]?.message}>
+        <FormInput
+          {...register(schema.flatSquare.name, schema.title)}
+          label="Площадь квартиры"
           disabled={status === 'loading'}
         />
       </Field>
